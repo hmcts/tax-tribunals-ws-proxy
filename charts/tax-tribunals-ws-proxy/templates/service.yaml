@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "tt-wsproxy.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "tt-wsproxy.name" . }}
+    helm.sh/chart: {{ include "tt-wsproxy.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 8080
+      protocol: TCP
+      name: http
+    - port: {{ .Values.wsservice.port }}
+      targetPort: 4430
+      protocol: TCP
+      name: ws
+  selector:
+    app.kubernetes.io/name: {{ include "tt-wsproxy.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
